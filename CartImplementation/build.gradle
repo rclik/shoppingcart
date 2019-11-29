@@ -1,0 +1,33 @@
+// after adding this line than gradle tasks command returns tasks for java 
+apply plugin: 'java'
+// otherwise there is no tasks at all
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+// no need for that
+// mainClassName = 'hello.HelloWorld'
+
+// adding maven repositories to resolve dependencies from the maven central repositories
+// tag::repositories[]
+repositories {
+    mavenCentral()
+}
+// end::repositories[]
+
+// tag::jar[]
+jar {
+    baseName = 'gs-gradle'
+    version =  '0.1.0'
+}
+// end::jar[]
+
+
+// tag::dependencies[]
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile "joda-time:joda-time:2.2"
+    testCompile "junit:junit:4.12"
+}
+// end::dependencies[]
