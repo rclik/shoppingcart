@@ -1,5 +1,7 @@
 package com.rcelik.cartimplementation.services.discounts.campaign;
 
+import com.rcelik.cartimplementation.services.cart.ShoppingCart;
+
 /**
  * This is abstract class for discounts. It holds:
  * <ul>
@@ -12,25 +14,23 @@ package com.rcelik.cartimplementation.services.discounts.campaign;
  */
 public abstract class Discount {
 
-	protected Double minPurchaseAmount;
 	protected Double discountAmount;
 	protected DiscountType type;
+	protected Double minAmount;
+	private DiscountPriority discountPriority;
 
 	/**
 	 * Abstract Discount constructor
 	 * 
-	 * @param type              specifies discount type
-	 * @param minPurchaseAmount minimum purchase amount
-	 * @param discountAmount    discount amount
+	 * @param type           specifies discount type
+	 * @param minAmount      minimum purchase amount
+	 * @param discountAmount discount amount
 	 */
-	protected Discount(DiscountType type, Double minPurchaseAmount, Double discountAmount) {
+	protected Discount(DiscountType type, Double minAmount, Double discountAmount, DiscountPriority priority) {
 		this.type = type;
-		this.minPurchaseAmount = minPurchaseAmount;
+		this.minAmount = minAmount;
 		this.discountAmount = discountAmount;
-	}
-
-	public Double getMinPurchaseAmount() {
-		return minPurchaseAmount;
+		this.discountPriority = priority;
 	}
 
 	public Double getDiscountAmount() {
@@ -40,4 +40,38 @@ public abstract class Discount {
 	public DiscountType getType() {
 		return type;
 	}
+
+	public DiscountPriority getDiscountPriority() {
+		return this.discountPriority;
+	}
+
+	/**
+	 * Applies the discount for given cart.
+	 * 
+	 * @see {@link Discount#isApplicable(ShoppingCart)}
+	 * @see {@link Discount#apply(ShoppingCart)}
+	 */
+	public final void apply(ShoppingCart cart) {
+		if (isApplicable(cart)) {
+			applyDiscount(cart);
+		}
+	}
+
+	/**
+	 * Applies the discount to the cart
+	 * 
+	 * @see {@link AmountCampaign#apply(ShoppingCart)}}
+	 * @see {@link RateCampaign#apply(ShoppingCart)}}
+	 * @see {@link AmountCoupon#apply(ShoppingCart)}}
+	 * @see {@link RateCoupon#apply(ShoppingCart)}}
+	 */
+	protected abstract void applyDiscount(ShoppingCart cart);
+
+	/**
+	 * Check if discount is applicable to cart
+	 * 
+	 * @see {@link Campaign#isApplicable(ShoppingCart))}}
+	 * @see {@link Coupon#isApplicable(ShoppingCart)}}
+	 */
+	protected abstract boolean isApplicable(ShoppingCart cart);
 }

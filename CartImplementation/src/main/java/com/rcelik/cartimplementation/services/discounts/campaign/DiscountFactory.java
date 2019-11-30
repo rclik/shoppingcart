@@ -24,20 +24,35 @@ public class DiscountFactory {
 	 * @param discountAmount     discount amount Creates a Campaign object
 	 * 
 	 */
-	public Campaign getDiscount(DiscountType type, Category category, Double minPurchuaseAmount,
+	public Campaign getDiscount(DiscountType type, Category category, int minPurchasedItemNumber,
 			Double discountAmount) {
-		return new Campaign(type, category, minPurchuaseAmount, discountAmount);
+		switch (type) {
+		case RATE:
+			return new RateCampaign(category, minPurchasedItemNumber, discountAmount);
+
+		case AMOUNT:
+			return new AmountCampaign(category, minPurchasedItemNumber, discountAmount);
+		default:
+			return null;
+		}
 	}
 
 	/**
 	 * @return {@link Coupon}
-	 * @param type               specifies discount type {@link DiscountType}
-	 * @param minPurchuaseAmount minimum purchase amount
-	 * @param discountAmount     discount amount Creates a Campaign object
+	 * @param type              specifies discount type {@link DiscountType}
+	 * @param minPurchaseAmount minimum purchase amount
+	 * @param discountAmount    discount amount Creates a Campaign object
 	 * 
 	 */
-	public Coupon getDiscount(DiscountType type, Double minPurchuaseAmount, Double discountAmount) {
-		return new Coupon(type, minPurchuaseAmount, discountAmount);
+	public Coupon getDiscount(DiscountType type, Double minPurchaseAmount, Double discountAmount) {
+		switch (type) {
+		case AMOUNT:
+			return new AmountCoupon(minPurchaseAmount, discountAmount);
+		case RATE:
+			return new RateCoupon(minPurchaseAmount, discountAmount);
+		default:
+			return null;
+		}
 	}
 
 }
