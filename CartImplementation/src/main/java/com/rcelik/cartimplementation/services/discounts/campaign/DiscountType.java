@@ -9,5 +9,5 @@ package com.rcelik.cartimplementation.services.discounts.campaign;
  * </ul>
  */
 public enum DiscountType {
-	AMOUNT, RATE
+	AMOUNT, RATE, DEFAULT
 }

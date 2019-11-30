@@ -1,30 +1,218 @@
 package com.rcelik.cartimplementation.services.cart;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-/**
- * This class stands for holding CartItems
- */
+import com.rcelik.cartimplementation.services.category.Category;
+import com.rcelik.cartimplementation.services.discounts.campaign.Coupon;
+import com.rcelik.cartimplementation.services.discounts.campaign.Discount;
+import com.rcelik.cartimplementation.services.product.Product;
+
 public class ShoppingCart {
 
-	private List<CartItem> list;
+	private Map<Product, Integer> cartItems;
+	private int maxDiscountNumber;
+	private Double totalCartPriceWithoutDiscounts;
+	private Double campaignDiscountAmount;
+	private Double couponDiscountAmount;
 
-	public ShoppingCart() {
-		this.list = new ArrayList<CartItem>();
+	private ShoppingCart() {
+		this.cartItems = new HashMap<Product, Integer>();
+		this.maxDiscountNumber = 0;
+		this.totalCartPriceWithoutDiscounts = 0.0;
+		this.campaignDiscountAmount = 0.0;
+		this.couponDiscountAmount = 0.0;
 	}
 
-	public ShoppingCart(CartItem item) {
+	/**
+	 * Constructor that creates ShoppingChart
+	 * 
+	 * @param product,          the cart is initialized with given product
+	 * @param quantity          with given quantity
+	 * @param maxDiscountNumber cart has maximum number of discounts to be added
+	 */
+	public ShoppingCart(Product product, Integer quantity, int maxDiscountNumber) {
 		this();
-		this.list.add(item);
+		this.addProduct(product, quantity);
+		this.maxDiscountNumber = maxDiscountNumber;
 	}
 
-	public List<CartItem> getAllItems() {
-		return this.list;
+	public int getMaxDiscountNumber() {
+		return maxDiscountNumber;
 	}
 
-	public void addItem(CartItem item) {
-		this.list.add(item);
+	/**
+	 * Returns all product inside the cart
+	 */
+	public List<Product> getProducts() {
+		List<Product> list = new ArrayList<Product>();
+		this.cartItems.forEach((product, quantity) -> {
+			list.add(product);
+		});
+		return list;
 	}
+
+	public Integer getProductQuantity(Product comingProduct) {
+		return this.cartItems.containsKey(comingProduct) ? this.cartItems.get(comingProduct) : 0;
+	}
+
+	/**
+	 * Adds a product to the cart.
+	 * 
+	 * @see ShoppingCart#addProduct(Product, int)
+	 */
+	public void addProduct(Product product) {
+		addProduct(product, 1);
+	}
+
+	/**
+	 * Adds a product @param product with given quantity @param quantity If the
+	 * product is already on the cart then increases its quantity with given
+	 * quantity value.
+	 */
+	public void addProduct(Product product, int quantity) {
+		Integer currentQuantity = getProductQuantity(product);
+		this.cartItems.put(product, currentQuantity + quantity);
+	}
+
+	/**
+	 * Returns distinct product number in the cart
+	 */
+	public Integer getDistinctProductNumber() {
+		return this.cartItems.size();
+	}
+
+	/**
+	 * Returns distinct category numbers in the cart
+	 */
+	public Integer getDistinctCategoryNumber() {
+		Set<Category> categorySet = new HashSet<Category>();
+		this.cartItems.forEach((product, quantity) -> {
+			categorySet.add(product.getCategory());
+		});
+		return categorySet.size();
+	}
+
+	/**
+	 * Applies given discounts to the to the cart. First checks if given number of
+	 * discounts is more than allowable discount for the cart, then throws
+	 * IllegalArgumentException else applies calculator logic of
+	 * {@link CartDiscountListCalculator#calculate()}
+	 */
+	public void applyDiscounts(Discount... discounts) throws IllegalArgumentException {
+		if (discounts.length > this.maxDiscountNumber) {
+			throw new IllegalArgumentException(
+					"Discounts cannot be applied to cart since number of discounts is bigger than maximum number of allowed discount: "
+							+ this.maxDiscountNumber);
+		} else {
+			CartDiscountListCalculator cal = new CartDiscountListCalculator(Arrays.asList(discounts), this);
+			cal.calculate(); // calculate all discounts
+		}
+	}
+
+	public Double getTotalCartPriceWithoutDiscounts() {
+		return this.totalCartPriceWithoutDiscounts;
+
+	}
+
+	/**
+	 * Calculates the total price of the cart
+	 */
+	public void calculateTotalCartPrice() {
+		this.cartItems.forEach((product, quantity) -> {
+			this.totalCartPriceWithoutDiscounts += product.getPrice() * quantity;
+		});
+//		System.out.println("[ShoppingCart.calculateTotalCartPrice] totalprice: " + this.totalCartPriceWithoutDiscounts);
+	}
+
+	/**
+	 * Return number of products in the cart, whose category is same as given
+	 */
+	public int getNumberOfCategoryItems(Category category) {
+		int quantity = 0;
+		for (Entry<Product, Integer> entry : this.cartItems.entrySet()) {
+			if (category.equals(entry.getKey().getCategory())) {
+				quantity += entry.getValue();
+			}
+		}
+		return quantity;
+	}
+
+	/**
+	 * Adds given discount amount to campaign discount amount.
+	 */
+	public void addCampaignDiscount(Double discountAmount) {
+		this.campaignDiscountAmount += discountAmount;
+	}
+
+	/**
+	 * Adds given discount amount to coupon discount amount.
+	 */
+	public void addCouponDiscount(Double discountAmount) {
+		this.couponDiscountAmount += discountAmount;
+	}
+
+	/**
+	 * Returns the total campaign discount mounts. Firstly it was 0, and whenever an
+	 * campaign is applied then it is increased with campaign discount
+	 * 
+	 */
+	public Double getCampaignDiscount() {
+		return this.campaignDiscountAmount;
+	}
+
+	/**
+	 * Returns the total coupon discount mounts. Firstly it was 0, and whenever an
+	 * coupon is applied then it is increased with campaign discount
+	 * 
+	 */
+	public Double getCouponDiscount() {
+		return this.couponDiscountAmount;
+	}
+
+	/**
+	 * Calculates the total price in the cart for given category.
+	 */
+	public Double getCategoryItemTotalPrice(Category category) {
+		Double totalCost = 0.0;
+		for (Entry<Product, Integer> entry : this.cartItems.entrySet()) {
+			if (category.equals(entry.getKey().getCategory())) {
+				totalCost += entry.getKey().getPrice() * entry.getValue();
+			}
+		}
+
+		return totalCost;
+	}
+
+	/**
+	 * Applies coupon to the cart
+	 * 
+	 * @see {@link ShoppingCart#applyDiscounts(Discount...)}
+	 */
+	public void applyCoupon(Coupon coupon) {
+		this.applyDiscounts(coupon);
+
+	}
+
+//	public void calculateEachCategoryTotalCartPrice() {
+//		Map<Category, Double> categoryTotalPriceMap = new HashMap<Category, Double>();
+//
+//		for (Entry<Product, Integer> entry : this.cartItems.entrySet()) {
+//			Category category = entry.getKey().getCategory();
+//			if (categoryTotalPriceMap.containsKey(category)) {
+//				double total = categoryTotalPriceMap.get(category) + entry.getKey().getPrice() * entry.getValue();
+//				categoryTotalPriceMap.put(category, total);
+//			} else {
+//
+//			}
+//		}
+//
+//	}
 
 }
