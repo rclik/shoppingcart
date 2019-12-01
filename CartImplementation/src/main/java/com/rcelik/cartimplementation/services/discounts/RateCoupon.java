@@ -4,16 +4,19 @@ import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 
 class RateCoupon extends Coupon {
 
+	/**
+	 * Fourth Priority Discount
+	 */
 	RateCoupon(Double amount, Double discountAmount) {
-		super(DiscountType.RATE, amount, discountAmount);
+		super(DiscountType.RATE, amount, discountAmount, DiscountPriority.FOURTH);
 	}
 
 	/**
-	 * calculates the discount with total price without any discount
+	 * calculates the discount with total price with discount
 	 */
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
-		double categoryTotalPrice = cart.getTotalCartPriceWithoutDiscounts();
-		cart.addCouponDiscount(categoryTotalPrice * this.getDiscountAmount() / 100);
+		double totalAmountAfterApplyingDiscounts = cart.getTotalCartPriceWithDiscounts();
+		cart.addCouponDiscount(totalAmountAfterApplyingDiscounts * getDiscountAmount() / 100);
 	}
 }

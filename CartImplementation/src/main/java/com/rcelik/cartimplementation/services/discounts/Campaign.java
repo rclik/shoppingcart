@@ -23,8 +23,9 @@ public abstract class Campaign extends Discount {
 	 * @param minPurchuaseAmount minimum purchase amount
 	 * @param discountAmount     discount amount
 	 */
-	public Campaign(DiscountType type, Category category, Integer minPurchasedItemNumber, Double discountAmount) {
-		super(type, Double.valueOf(minPurchasedItemNumber), discountAmount, DiscountPriority.FIRST);
+	public Campaign(DiscountType type, Category category, Integer minPurchasedItemNumber, Double discountAmount,
+			DiscountPriority discountPriority) {
+		super(type, Double.valueOf(minPurchasedItemNumber), discountAmount, discountPriority);
 		this.category = category;
 	}
 

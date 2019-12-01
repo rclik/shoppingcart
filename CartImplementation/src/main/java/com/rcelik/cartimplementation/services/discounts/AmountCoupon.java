@@ -4,8 +4,11 @@ import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 
 public class AmountCoupon extends Coupon {
 
+	/**
+	 * Third priority discount
+	 */
 	public AmountCoupon(Double amount, Double discountAmount) {
-		super(DiscountType.AMOUNT, amount, discountAmount);
+		super(DiscountType.AMOUNT, amount, discountAmount, DiscountPriority.THIRD);
 	}
 
 	/**
@@ -14,7 +17,6 @@ public class AmountCoupon extends Coupon {
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
 		cart.addCouponDiscount(this.discountAmount);
-//		System.out.println("[AmountCoupon] " + cart.getCouponDiscount());
 	}
 
 }
