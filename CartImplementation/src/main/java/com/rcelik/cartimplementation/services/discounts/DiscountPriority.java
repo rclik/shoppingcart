@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 public enum DiscountPriority {
 	FIRST(1), SECOND(2);

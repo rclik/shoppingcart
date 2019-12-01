@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 
@@ -27,8 +27,11 @@ public abstract class Coupon extends Discount {
 	 * bigger than discount`s minimum purchased amount.
 	 */
 	@Override
-	protected boolean isApplicable(ShoppingCart cart) {
-		return this.getMinPurchasedAmount() < cart.getTotalCartPriceWithoutDiscounts();
+	protected void isApplicable(ShoppingCart cart) throws IllegalArgumentException {
+		if (this.getMinPurchasedAmount() > cart.getTotalCartPriceWithoutDiscounts())
+			throw new IllegalArgumentException(
+					"Coupon is not suitable for given cart, Cart total price should have more than  + "
+							+ getMinPurchasedAmount());
 	}
 
 }

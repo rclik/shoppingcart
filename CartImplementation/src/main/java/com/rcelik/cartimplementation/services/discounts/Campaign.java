@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 import com.rcelik.cartimplementation.services.category.Category;
@@ -41,10 +41,11 @@ public abstract class Campaign extends Discount {
 	 * cart. If number if category item in the cart is bigger than minimum category
 	 * number then it is applicable.
 	 * 
-	 * @return boolean
 	 */
 	@Override
-	protected boolean isApplicable(ShoppingCart cart) {
-		return this.getMinPurchasedItemNumber() < cart.getNumberOfCategoryItems(this.getCategory());
+	protected void isApplicable(ShoppingCart cart) throws IllegalArgumentException {
+		if (this.getMinPurchasedItemNumber() > cart.getNumberOfCategoryItems(this.getCategory()))
+			throw new IllegalArgumentException("Campaign is not suitable for given cart, Cart should have more than "
+					+ getMinPurchasedItemNumber() + " items for " + this.category.getTitle() + " category");
 	}
 }

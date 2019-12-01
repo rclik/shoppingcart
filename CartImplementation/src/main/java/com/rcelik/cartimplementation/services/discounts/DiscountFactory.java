@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 import com.rcelik.cartimplementation.services.category.Category;
 
@@ -29,7 +29,6 @@ public class DiscountFactory {
 		switch (type) {
 		case RATE:
 			return new RateCampaign(category, minPurchasedItemNumber, discountAmount);
-
 		case AMOUNT:
 			return new AmountCampaign(category, minPurchasedItemNumber, discountAmount);
 		default:

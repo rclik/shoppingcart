@@ -9,18 +9,23 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.rcelik.cartimplementation.services.cart.utils.CartUtilFactory;
+import com.rcelik.cartimplementation.services.cart.utils.orderer.CartOrderer;
+import com.rcelik.cartimplementation.services.cart.utils.printer.CartPrinter;
 import com.rcelik.cartimplementation.services.category.Category;
-import com.rcelik.cartimplementation.services.discounts.campaign.Coupon;
-import com.rcelik.cartimplementation.services.discounts.campaign.Discount;
+import com.rcelik.cartimplementation.services.discounts.Coupon;
+import com.rcelik.cartimplementation.services.discounts.Discount;
 import com.rcelik.cartimplementation.services.product.Product;
 
 public class ShoppingCart {
 
 	private Map<Product, Integer> cartItems;
 	private int maxDiscountNumber;
+	private int appliedDiscountNumber;
 	private Double totalCartPriceWithoutDiscounts;
 	private Double campaignDiscountAmount;
 	private Double couponDiscountAmount;
+	private Double deliveryCost;
 
 	private ShoppingCart() {
 		this.cartItems = new HashMap<Product, Integer>();
@@ -28,6 +33,8 @@ public class ShoppingCart {
 		this.totalCartPriceWithoutDiscounts = 0.0;
 		this.campaignDiscountAmount = 0.0;
 		this.couponDiscountAmount = 0.0;
+		this.deliveryCost = 0.0;
+		this.appliedDiscountNumber = 0;
 	}
 
 	/**
@@ -106,33 +113,34 @@ public class ShoppingCart {
 	 * {@link CartDiscountListCalculator#calculate()}
 	 */
 	public void applyDiscounts(Discount... discounts) throws IllegalArgumentException {
-		if (discounts.length > this.maxDiscountNumber) {
+		if ((discounts.length + appliedDiscountNumber) > this.maxDiscountNumber) {
 			throw new IllegalArgumentException(
-					"Discounts cannot be applied to cart since number of discounts is bigger than maximum number of allowed discount: "
+					"Discounts cannot be applied to cart since number of applied discounts is bigger than maximum number of allowed discount: "
 							+ this.maxDiscountNumber);
 		} else {
 			CartDiscountListCalculator cal = new CartDiscountListCalculator(Arrays.asList(discounts), this);
 			cal.calculate(); // calculate all discounts
+			appliedDiscountNumber += discounts.length; // increment the applied
 		}
 	}
 
 	public Double getTotalCartPriceWithoutDiscounts() {
 		return this.totalCartPriceWithoutDiscounts;
-
 	}
 
 	/**
 	 * Calculates the total price of the cart
 	 */
-	public void calculateTotalCartPrice() {
+	void calculateTotalCartPrice() {
+		this.totalCartPriceWithoutDiscounts = 0.0; // maybe the function is called before.
 		this.cartItems.forEach((product, quantity) -> {
 			this.totalCartPriceWithoutDiscounts += product.getPrice() * quantity;
 		});
-//		System.out.println("[ShoppingCart.calculateTotalCartPrice] totalprice: " + this.totalCartPriceWithoutDiscounts);
 	}
 
 	/**
-	 * Return number of products in the cart, whose category is same as given
+	 * Return number of products in the cart, whose category is same as given. if
+	 * given category is not fount then returns 0
 	 */
 	public int getNumberOfCategoryItems(Category category) {
 		int quantity = 0;
@@ -195,24 +203,45 @@ public class ShoppingCart {
 	 * 
 	 * @see {@link ShoppingCart#applyDiscounts(Discount...)}
 	 */
-	public void applyCoupon(Coupon coupon) {
+	public void applyCoupon(Coupon coupon) throws IllegalArgumentException {
 		this.applyDiscounts(coupon);
-
 	}
 
-//	public void calculateEachCategoryTotalCartPrice() {
-//		Map<Category, Double> categoryTotalPriceMap = new HashMap<Category, Double>();
-//
-//		for (Entry<Product, Integer> entry : this.cartItems.entrySet()) {
-//			Category category = entry.getKey().getCategory();
-//			if (categoryTotalPriceMap.containsKey(category)) {
-//				double total = categoryTotalPriceMap.get(category) + entry.getKey().getPrice() * entry.getValue();
-//				categoryTotalPriceMap.put(category, total);
-//			} else {
-//
-//			}
-//		}
-//
-//	}
+	public void setDeliveryCost(Double deliveryCost) {
+		this.deliveryCost = deliveryCost;
+	}
+
+	public Double getDeliveryCost() {
+		return this.deliveryCost;
+	}
+
+	/**
+	 * This calculates the total discounts applied to the cart.
+	 */
+	public Double getTotalDiscounts() {
+		return this.getCouponDiscount() + this.getCampaignDiscount();
+	}
+
+	/**
+	 * This calculates the total cost. It is calculated by summing delivery cost and
+	 * total cart cost and subtracting total discount mount form that.
+	 */
+	public Double getTotalCost() {
+		return this.getTotalCartPriceWithoutDiscounts() + this.getDeliveryCost() - this.getTotalDiscounts();
+	}
+
+	/**
+	 * Calculates the cart total price after subtracting total discounts
+	 */
+	public Double getTotalCartPriceWithDiscounts() {
+		return totalCartPriceWithoutDiscounts - getTotalDiscounts();
+	}
+
+	public void print() {
+		// orders products with respect to category title
+		CartPrinter printer = CartUtilFactory.getInstance().getPrinter();
+		CartOrderer orderer = CartUtilFactory.getInstance().getOrderer();
+		printer.printOrderly(this, orderer);
+	}
 
 }

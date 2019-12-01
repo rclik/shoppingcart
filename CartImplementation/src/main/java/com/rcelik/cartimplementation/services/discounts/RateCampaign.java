@@ -1,11 +1,11 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 import com.rcelik.cartimplementation.services.category.Category;
 
-public class RateCampaign extends Campaign {
+class RateCampaign extends Campaign {
 
-	public RateCampaign(Category category, Integer purchasedItemNumber, Double discountAmount) {
+	RateCampaign(Category category, Integer purchasedItemNumber, Double discountAmount) {
 		super(DiscountType.RATE, category, purchasedItemNumber, discountAmount);
 	}
 
@@ -13,7 +13,7 @@ public class RateCampaign extends Campaign {
 	protected void applyDiscount(ShoppingCart cart) {
 		double categoryTotalPrice = cart.getCategoryItemTotalPrice(this.getCategory());
 		cart.addCampaignDiscount(categoryTotalPrice * this.getDiscountAmount()/100);
-		System.out.println("[RateCampaign] " + cart.getCampaignDiscount());
+//		System.out.println("[RateCampaign] " + cart.getCampaignDiscount());
 	}
 
 }

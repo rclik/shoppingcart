@@ -2,7 +2,7 @@ package com.rcelik.cartimplementation.services.product;
 
 import com.rcelik.cartimplementation.services.category.Category;
 
-public class Product {
+public class Product implements Comparable<Product> {
 	private Category category;
 	private String title;
 	private Double price;
@@ -65,5 +65,15 @@ public class Product {
 			this.price = price;
 			return this;
 		}
+	}
+
+	@Override
+	public int compareTo(Product product) {
+		return this.getCategory().getTitle().compareTo(product.getCategory().getTitle());
+	}
+
+	@Override
+	public String toString() {
+		return "Product: [title: " + this.title + ", price: " + price + ", category: " + category + "]";
 	}
 }
