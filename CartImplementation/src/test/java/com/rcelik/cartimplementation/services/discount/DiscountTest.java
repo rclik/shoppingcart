@@ -102,4 +102,23 @@ public class DiscountTest {
 		Assert.assertEquals(DiscountPriority.SECOND, discount.getDiscountPriority());
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public final void createRateCouponWithOverMaxDiscountAmoutTest() {
+		Double minPurchaseAmount = Double.valueOf(10);
+		Double discountAmount = Double.valueOf(150);
+		Coupon discount = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, minPurchaseAmount,
+				discountAmount);
+		Assert.assertEquals(DiscountPriority.SECOND, discount.getDiscountPriority());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void createRateCampaignWithOverMaxDiscountAmoutTest() {
+		int minPurchaseAmount = 10;
+		Double discountAmount = Double.valueOf(150);
+		Category category = new Category.Builder("Fruit").build();
+		Campaign camp = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, category, minPurchaseAmount,
+				discountAmount);
+		Assert.assertEquals(DiscountPriority.SECOND, camp.getDiscountPriority());
+	}
+
 }

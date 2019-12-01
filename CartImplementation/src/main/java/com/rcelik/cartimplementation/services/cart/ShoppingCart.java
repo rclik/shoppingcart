@@ -120,7 +120,7 @@ public class ShoppingCart {
 		} else {
 			CartDiscountListCalculator cal = new CartDiscountListCalculator(Arrays.asList(discounts), this);
 			cal.calculate(); // calculate all discounts
-			appliedDiscountNumber += discounts.length; // increment the applied
+			appliedDiscountNumber += discounts.length; // increment the applied discount number
 		}
 	}
 
