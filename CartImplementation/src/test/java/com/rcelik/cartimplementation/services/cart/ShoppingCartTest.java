@@ -50,9 +50,9 @@ public class ShoppingCartTest {
 		laptopProductPrice = Double.valueOf(2500);
 		laptopProduct = new Product.Builder(electronicCategory, "Laptop").withPrice(laptopProductPrice).build();
 
-		rateFruitCampaign = DiscountFactory.getInstance().getDiscount(DiscountType.AMOUNT, fruitCategory, 1,
+		amountFruitCampaign = DiscountFactory.getInstance().getDiscount(DiscountType.AMOUNT, fruitCategory, 1,
 				Double.valueOf(2));
-		amountFruitCampaign = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, fruitCategory, 1,
+		rateFruitCampaign = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, fruitCategory, 1,
 				Double.valueOf(2));
 		rateCoupon = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, Double.valueOf(2), Double.valueOf(2));
 		amountCoupon = DiscountFactory.getInstance().getDiscount(DiscountType.AMOUNT, Double.valueOf(2),
@@ -147,6 +147,35 @@ public class ShoppingCartTest {
 		Assert.assertEquals(Double.valueOf(15.99), cart.getDeliveryCost());
 		// calculate total cost 2407.248
 		Assert.assertEquals(Double.valueOf(2407.2872), cart.getTotalCost(), 0.00001);
+		cart.print();
+	}
+
+	@Test
+	public final void rateCampaignFirstTest() {
+		ShoppingCart cart = createShoppingCart(appleProduct, 5, 5);
+		cart.addProduct(strawberyProduct, 2);
+		cart.addProduct(laptopProduct, 1);
+		cart.applyDiscounts(rateFruitCampaign);
+
+		Double costPerDelivery = Double.valueOf(2);
+		Double costPerProduct = Double.valueOf(3);
+		Double fixedCost = Double.valueOf(2.99);
+
+		DeliveryCostCalculator calculator = new DeliveryCostCalculator(costPerDelivery, costPerProduct, fixedCost);
+		calculator.calculateFor(cart);
+
+		// total amount before discounts
+		Assert.assertEquals(Double.valueOf(2545), cart.getTotalCartPriceWithoutDiscounts());
+		// calculate total campaign discounts
+		Assert.assertEquals(Double.valueOf(0.9), cart.getCampaignDiscount());
+//		// calculate total discounts
+//		Assert.assertEquals(Double.valueOf(153.7028), cart.getTotalDiscounts());
+//		// calculate total amount after discounts
+//		Assert.assertEquals(Double.valueOf(2391.2972), cart.getTotalCartPriceWithDiscounts());
+//		// calculate delivery cost
+//		Assert.assertEquals(Double.valueOf(15.99), cart.getDeliveryCost());
+//		// calculate total cost 2407.248
+//		Assert.assertEquals(Double.valueOf(2407.2872), cart.getTotalCost(), 0.00001);
 		cart.print();
 	}
 

@@ -211,10 +211,9 @@ public class ShoppingCart {
 	 */
 	public Double getCategoryTotalDiscountedPrice(Category category) {
 		if (!categoryTotalDiscountedPriceMap.containsKey(category)) {
-			return categoryTotalDiscountedPriceMap.put(category, getCategoryItemTotalPrice(category));
-		} else {
-			return categoryTotalDiscountedPriceMap.get(category);
+			categoryTotalDiscountedPriceMap.put(category, getCategoryItemTotalPrice(category));
 		}
+		return categoryTotalDiscountedPriceMap.get(category);
 	}
 
 	/**
