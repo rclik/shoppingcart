@@ -17,8 +17,8 @@ class CartDiscountListCalculator {
 	}
 
 	/**
-	 * Calculates the total discounts for coupon and campaign first orders the
-	 * discounts then applies discount operation for corresponding discount
+	 * Calculates the total discounts for coupon and campaign. Firstly it orders the
+	 * discounts then applies discounts to the cart.
 	 * 
 	 * @throws IllegalArgumentException if given discount is not suitable for the
 	 *                                  given cart. After getting this exception, if
