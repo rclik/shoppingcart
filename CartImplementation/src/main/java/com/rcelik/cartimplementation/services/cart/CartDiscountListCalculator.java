@@ -2,7 +2,7 @@ package com.rcelik.cartimplementation.services.cart;
 
 import java.util.List;
 
-import com.rcelik.cartimplementation.services.discounts.campaign.Discount;
+import com.rcelik.cartimplementation.services.discounts.Discount;
 
 /**
  * Helper class that calculates the discounts
@@ -11,7 +11,7 @@ class CartDiscountListCalculator {
 	List<Discount> discountList;
 	ShoppingCart cart;
 
-	public CartDiscountListCalculator(List<Discount> discountList, ShoppingCart cart) {
+	CartDiscountListCalculator(List<Discount> discountList, ShoppingCart cart) {
 		this.discountList = discountList;
 		this.cart = cart;
 	}
@@ -19,12 +19,19 @@ class CartDiscountListCalculator {
 	/**
 	 * Calculates the total discounts for coupon and campaign first orders the
 	 * discounts then applies discount operation for corresponding discount
+	 * 
+	 * @throws IllegalArgumentException if given discount is not suitable for the
+	 *                                  given cart. After getting this exception, if
+	 *                                  cart object is used then already applied
+	 *                                  discounts like appliedDiscount,
+	 *                                  campaignDiscount, couponDiscount and
+	 *                                  totalDiscount class instances should be
+	 *                                  updated
 	 */
-	public void calculate() {
+	void calculate() throws IllegalArgumentException {
 		// order the discounts
 		orderDiscounts();
-		cart.calculateTotalCartPrice();
-//		cart.calculateEachCategoryTotalCartPrice();
+		cart.calculateTotalCartPrice(); // need to calculate total cart price
 		for (Discount discount : discountList) {
 			discount.apply(cart);
 		}

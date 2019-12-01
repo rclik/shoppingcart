@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 /**
  * There are two types of discounts

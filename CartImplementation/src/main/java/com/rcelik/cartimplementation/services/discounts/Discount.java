@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 
@@ -51,10 +51,9 @@ public abstract class Discount {
 	 * @see {@link Discount#isApplicable(ShoppingCart)}
 	 * @see {@link Discount#apply(ShoppingCart)}
 	 */
-	public final void apply(ShoppingCart cart) {
-		if (isApplicable(cart)) {
-			applyDiscount(cart);
-		}
+	public final void apply(ShoppingCart cart) throws IllegalArgumentException {
+		isApplicable(cart);
+		applyDiscount(cart);
 	}
 
 	/**
@@ -73,5 +72,5 @@ public abstract class Discount {
 	 * @see {@link Campaign#isApplicable(ShoppingCart))}}
 	 * @see {@link Coupon#isApplicable(ShoppingCart)}}
 	 */
-	protected abstract boolean isApplicable(ShoppingCart cart);
+	protected abstract void isApplicable(ShoppingCart cart) throws IllegalArgumentException;
 }

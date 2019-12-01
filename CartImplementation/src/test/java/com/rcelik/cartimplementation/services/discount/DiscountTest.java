@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.rcelik.cartimplementation.services.category.Category;
-import com.rcelik.cartimplementation.services.discounts.campaign.Campaign;
-import com.rcelik.cartimplementation.services.discounts.campaign.Coupon;
-import com.rcelik.cartimplementation.services.discounts.campaign.DiscountFactory;
-import com.rcelik.cartimplementation.services.discounts.campaign.DiscountPriority;
-import com.rcelik.cartimplementation.services.discounts.campaign.DiscountType;
+import com.rcelik.cartimplementation.services.discounts.Campaign;
+import com.rcelik.cartimplementation.services.discounts.Coupon;
+import com.rcelik.cartimplementation.services.discounts.DiscountFactory;
+import com.rcelik.cartimplementation.services.discounts.DiscountPriority;
+import com.rcelik.cartimplementation.services.discounts.DiscountType;
 
 /**
  * There are discounts: Campaign and Coupon

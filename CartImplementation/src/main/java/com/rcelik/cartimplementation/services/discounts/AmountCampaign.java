@@ -1,4 +1,4 @@
-package com.rcelik.cartimplementation.services.discounts.campaign;
+package com.rcelik.cartimplementation.services.discounts;
 
 import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 import com.rcelik.cartimplementation.services.category.Category;
@@ -12,6 +12,6 @@ public class AmountCampaign extends Campaign {
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
 		cart.addCampaignDiscount(this.discountAmount);
-		System.out.println("[AmountCampaign] " + cart.getCampaignDiscount());
+//		System.out.println("[AmountCampaign] " + cart.getCampaignDiscount());
 	}
 }
