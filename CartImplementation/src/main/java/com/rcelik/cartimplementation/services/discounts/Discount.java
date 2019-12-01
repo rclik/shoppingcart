@@ -5,8 +5,8 @@ import com.rcelik.cartimplementation.services.cart.ShoppingCart;
 /**
  * This is abstract class for discounts. It holds:
  * <ul>
- * <li>{@link Discount#minPurchaseAmount} minimum purchase amount in order to be
- * this discount can be applied</li>
+ * <li>{@link Discount#minAmount} minimum purchase amount in order to be this
+ * discount can be applied</li>
  * <li>{@link Discount#discountAmount} discount amount for the purchase</li>
  * <li>{@link Discount#type} discount type, there are two type of discount
  * please refer {@link DiscountType}</li>
@@ -23,8 +23,9 @@ public abstract class Discount {
 	 * Abstract Discount constructor
 	 * 
 	 * @param type           specifies discount type
-	 * @param minAmount      minimum purchase amount
-	 * @param discountAmount discount amount
+	 * @param minAmount      minimum purchase amount, it can be minimum category
+	 *                       item number or minimum total cart price
+	 * @param discountAmount discount amount, it can be an amount or percentage
 	 */
 	protected Discount(DiscountType type, Double minAmount, Double discountAmount, DiscountPriority priority) {
 		this.type = type;
@@ -69,8 +70,11 @@ public abstract class Discount {
 	/**
 	 * Check if discount is applicable to cart
 	 * 
-	 * @see {@link Campaign#isApplicable(ShoppingCart))}}
+	 * @see {@link Campaign#isApplicable(ShoppingCart)}}
 	 * @see {@link Coupon#isApplicable(ShoppingCart)}}
+	 * 
+	 * @throws IllegalArgumentException when discount is not applicable for given
+	 *                                  cart
 	 */
 	protected abstract void isApplicable(ShoppingCart cart) throws IllegalArgumentException;
 }

@@ -10,7 +10,7 @@ public abstract class Coupon extends Discount {
 	 * Creates the Coupon Object
 	 * 
 	 * @param type               specifies discount type {@link DiscountType}
-	 * @param minPurchuaseAmount minimum purchase amount
+	 * @param minPurchuaseAmount minimum purchase amount for the cart
 	 * @param discountAmount     discount amount
 	 */
 	public Coupon(DiscountType type, Double minimumCartAmount, Double discountAmount) {
@@ -22,13 +22,12 @@ public abstract class Coupon extends Discount {
 	}
 
 	/**
-	 * Checks minimum purchased amount and cart`s total purchased price before
-	 * discount is applied. cart`s total purchased price before discount should be
-	 * bigger than discount`s minimum purchased amount.
+	 * @throws IllegalArgumentException when cart total price is less than minimum
+	 *                                  total cart price.
 	 */
 	@Override
 	protected void isApplicable(ShoppingCart cart) throws IllegalArgumentException {
-		if (this.getMinPurchasedAmount() > cart.getTotalCartPriceWithoutDiscounts())
+		if (getMinPurchasedAmount() > cart.getTotalCartPriceWithoutDiscounts())
 			throw new IllegalArgumentException(
 					"Coupon is not suitable for given cart, Cart total price should have more than  + "
 							+ getMinPurchasedAmount());

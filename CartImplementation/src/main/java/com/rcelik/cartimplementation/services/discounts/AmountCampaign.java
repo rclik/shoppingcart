@@ -9,6 +9,9 @@ public class AmountCampaign extends Campaign {
 		super(DiscountType.AMOUNT, category, purchasedItemNumber, discountAmount);
 	}
 
+	/**
+	 * Increments coupon discount of given chart
+	 */
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
 		cart.addCampaignDiscount(this.discountAmount);

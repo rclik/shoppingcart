@@ -8,10 +8,12 @@ class RateCoupon extends Coupon {
 		super(DiscountType.RATE, amount, discountAmount);
 	}
 
+	/**
+	 * calculates the discount with total price without any discount
+	 */
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
 		double categoryTotalPrice = cart.getTotalCartPriceWithoutDiscounts();
 		cart.addCouponDiscount(categoryTotalPrice * this.getDiscountAmount() / 100);
-//		System.out.println("[RateCoupon] " + cart.getCouponDiscount());
 	}
 }

@@ -37,10 +37,8 @@ public abstract class Campaign extends Discount {
 	}
 
 	/**
-	 * Checks if category`s minimum item number and number of category item in the
-	 * cart. If number if category item in the cart is bigger than minimum category
-	 * number then it is applicable.
-	 * 
+	 * @throws IllegalArgumentException when number of category items in the cart is
+	 *                                  less than minimum purchase item number.
 	 */
 	@Override
 	protected void isApplicable(ShoppingCart cart) throws IllegalArgumentException {

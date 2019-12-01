@@ -8,6 +8,9 @@ public class AmountCoupon extends Coupon {
 		super(DiscountType.AMOUNT, amount, discountAmount);
 	}
 
+	/**
+	 * Increments coupon discount of given chart
+	 */
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
 		cart.addCouponDiscount(this.discountAmount);

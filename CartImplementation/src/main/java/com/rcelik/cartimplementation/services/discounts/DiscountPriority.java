@@ -1,5 +1,8 @@
 package com.rcelik.cartimplementation.services.discounts;
 
+/**
+ * Enum is used for prioritizing the discount
+ */
 public enum DiscountPriority {
 	FIRST(1), SECOND(2);
 
