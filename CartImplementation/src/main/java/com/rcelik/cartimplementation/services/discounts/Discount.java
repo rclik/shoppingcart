@@ -26,6 +26,8 @@ public abstract class Discount {
 	 * @param minAmount      minimum purchase amount, it can be minimum category
 	 *                       item number or minimum total cart price
 	 * @param discountAmount discount amount, it can be an amount or percentage
+	 * @param priority       priority of the discount, discount is applied according
+	 *                       to this value
 	 */
 	protected Discount(DiscountType type, Double minAmount, Double discountAmount, DiscountPriority priority) {
 		this.type = type;

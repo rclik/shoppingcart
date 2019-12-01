@@ -5,8 +5,11 @@ import com.rcelik.cartimplementation.services.category.Category;
 
 public class AmountCampaign extends Campaign {
 
+	/**
+	 * First Priority Discount
+	 * */
 	public AmountCampaign(Category category, Integer purchasedItemNumber, Double discountAmount) {
-		super(DiscountType.AMOUNT, category, purchasedItemNumber, discountAmount);
+		super(DiscountType.AMOUNT, category, purchasedItemNumber, discountAmount, DiscountPriority.FIRST);
 	}
 
 	/**
@@ -15,6 +18,6 @@ public class AmountCampaign extends Campaign {
 	@Override
 	protected void applyDiscount(ShoppingCart cart) {
 		cart.addCampaignDiscount(this.discountAmount);
-//		System.out.println("[AmountCampaign] " + cart.getCampaignDiscount());
+		cart.setCategoryTotalDiscountedPrice(getCategory(), discountAmount);
 	}
 }

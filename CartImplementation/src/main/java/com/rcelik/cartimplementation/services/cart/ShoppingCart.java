@@ -20,6 +20,8 @@ import com.rcelik.cartimplementation.services.product.Product;
 public class ShoppingCart {
 
 	private Map<Product, Integer> cartItems;
+	private Map<Category, Double> categoryTotalDiscountedPriceMap = new HashMap<Category, Double>();
+
 	private int maxDiscountNumber;
 	private int appliedDiscountNumber;
 	private Double totalCartPriceWithoutDiscounts;
@@ -187,15 +189,49 @@ public class ShoppingCart {
 	/**
 	 * Calculates the total price in the cart for given category.
 	 */
-	public Double getCategoryItemTotalPrice(Category category) {
+	private Double getCategoryItemTotalPrice(Category category) {
 		Double totalCost = 0.0;
 		for (Entry<Product, Integer> entry : this.cartItems.entrySet()) {
 			if (category.equals(entry.getKey().getCategory())) {
 				totalCost += entry.getKey().getPrice() * entry.getValue();
 			}
 		}
-
 		return totalCost;
+	}
+
+	/**
+	 * 
+	 * This function returns total discounted price for given category. The value is
+	 * holding a category-discountedPrice map.
+	 * <p>
+	 * If the map does not contain the category then it calculates total price for
+	 * it in the cart and puts it in the map. Then returns its value.
+	 * </p>
+	 * This map is used for calculating rated campaign.
+	 */
+	public Double getCategoryTotalDiscountedPrice(Category category) {
+		if (!categoryTotalDiscountedPriceMap.containsKey(category)) {
+			return categoryTotalDiscountedPriceMap.put(category, getCategoryItemTotalPrice(category));
+		} else {
+			return categoryTotalDiscountedPriceMap.get(category);
+		}
+	}
+
+	/**
+	 * This function populates category-discountedPrice map entry corresponding to
+	 * given category.
+	 * <p>
+	 * If the map does not contain the category then it calculates total price in
+	 * the cart for it. The calculated value is subtracted by given discount then it
+	 * puts it in the map.
+	 * </p>
+	 * This map is used for calculating rated campaign.
+	 */
+	public void setCategoryTotalDiscountedPrice(Category category, Double discount) {
+		Double amount = categoryTotalDiscountedPriceMap.containsKey(category)
+				? categoryTotalDiscountedPriceMap.get(category)
+				: getCategoryItemTotalPrice(category);
+		categoryTotalDiscountedPriceMap.put(category, amount - discount);
 	}
 
 	/**
@@ -243,5 +279,4 @@ public class ShoppingCart {
 		CartOrderer orderer = CartUtilFactory.getInstance().getOrderer();
 		printer.printOrderly(this, orderer);
 	}
-
 }

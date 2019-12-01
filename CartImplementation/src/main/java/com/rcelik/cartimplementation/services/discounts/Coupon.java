@@ -13,8 +13,8 @@ public abstract class Coupon extends Discount {
 	 * @param minPurchuaseAmount minimum purchase amount for the cart
 	 * @param discountAmount     discount amount
 	 */
-	public Coupon(DiscountType type, Double minimumCartAmount, Double discountAmount) {
-		super(type, minimumCartAmount, discountAmount, DiscountPriority.SECOND);
+	public Coupon(DiscountType type, Double minimumCartAmount, Double discountAmount, DiscountPriority discountPriority) {
+		super(type, minimumCartAmount, discountAmount, discountPriority);
 	}
 
 	public Double getMinPurchasedAmount() {

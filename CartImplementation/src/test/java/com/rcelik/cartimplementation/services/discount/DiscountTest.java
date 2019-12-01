@@ -99,7 +99,7 @@ public class DiscountTest {
 		Double discountAmount = Double.valueOf(10);
 		Coupon discount = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, minPurchaseAmount,
 				discountAmount);
-		Assert.assertEquals(DiscountPriority.SECOND, discount.getDiscountPriority());
+		Assert.assertEquals(DiscountPriority.FOURTH, discount.getDiscountPriority());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -108,7 +108,7 @@ public class DiscountTest {
 		Double discountAmount = Double.valueOf(150);
 		Coupon discount = DiscountFactory.getInstance().getDiscount(DiscountType.RATE, minPurchaseAmount,
 				discountAmount);
-		Assert.assertEquals(DiscountPriority.SECOND, discount.getDiscountPriority());
+		Assert.assertEquals(DiscountPriority.FOURTH, discount.getDiscountPriority());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
